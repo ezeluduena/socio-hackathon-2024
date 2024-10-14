@@ -2,3 +2,4 @@ ipykernel
 requests
 pandas
 matplotlib
+seaborn
