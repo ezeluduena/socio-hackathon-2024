@@ -1,2 +1,2 @@
-data/presupuesto/*.csv
+data/presupuesto/credito-anual-*.csv
 .venv
