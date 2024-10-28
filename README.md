@@ -1,18 +1,18 @@
 # Análisis de la inversión en políticas laborales y su efecto durante el período 2012-2019 en Argentina
 
-En este repositorio se comparten los datos y scripts utilizados en el trabajo presentado en el **[Socio-hackathon Investigar en Sociales 2024](https://sociales.unc.edu.ar/content/todav-est-s-tiempo-de-presentarte-en-el-i-socio-hackathon-investigar-en-sociales-2024-la)** por **Manuel Barragán, Micaela De Hernandez, Ezequiel Ludueña y Marco Spalletti**.
+En este repositorio se comparten los datos y scripts utilizados en el trabajo presentado en el **[Socio-hackathon Investigar en Sociales 2024](https://sociales.unc.edu.ar/content/todav-est-s-tiempo-de-presentarte-en-el-i-socio-hackathon-investigar-en-sociales-2024-la)** por **Manuel Barragán, Micaela De Hernández, Ezequiel Ludueña y Marco Spalletti**.
 
-La pregunta que guíó el análisis y desarrollo de este trabajo fue:
+La pregunta que guió el análisis y desarrollo de este trabajo fue:
 
-**¿En qué medida el presupuesto anual ejecutado para la función “Trabajo” incide en las estadísticas laborales?**
+**¿En qué medida el presupuesto anual ejecutado para la función "Trabajo" incide en las estadísticas laborales?**
 
 Se pretendió analizar el impacto de los montos dedicados a políticas laborales, desagregando en distintas poblaciones, y comparando entre distintos períodos de gestión.
 
-Para realizar este trabajo, las fuentes de datos utilizadas fueron los [datos abiertos disponibles del presupuesto nacional](https://www.presupuestoabierto.gob.ar/sici/datos-abiertos) y los resultados que se obtuvieron a partir de trabajo con la [Encuesta Permanente de Hogares (EPH)](https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos), realizada por el [INDEC](https://www.indec.gob.ar/), que releva de manera trimestral los datos sociodemográficos y socioeconómicos de la población.
+Para realizar este trabajo, las fuentes de datos utilizadas fueron los [datos abiertos disponibles del presupuesto nacional](https://www.presupuestoabierto.gob.ar/sici/datos-abiertos) y los resultados que se obtuvieron a partir del trabajo con la [Encuesta Permanente de Hogares (EPH)](https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos), realizada por el [INDEC](https://www.indec.gob.ar/), que releva de manera trimestral los datos sociodemográficos y socioeconómicos de la población.
 
 En [`informe.pdf`](https://github.com/ezeluduena/socio-hackathon/blob/main/informe.pdf) se puede leer el informe del proyecto presentado en la competencia.
 
-## Estructura del Repositorio
+## Estructura del repositorio
 
 - **Directorios:**
 
@@ -29,10 +29,10 @@ En [`informe.pdf`](https://github.com/ezeluduena/socio-hackathon/blob/main/infor
 
 - **Otros archivos:**
   - **[`informe.pdf`](https://github.com/ezeluduena/socio-hackathon/blob/main/informe.pdf):** informe sobre el trabajo realizado.
-  - **[`requirements.txt`](https://github.com/ezeluduena/socio-hackathon/blob/main/requirements.txt):** listado de librerias de python utilizadas en los notebooks.
+  - **[`requirements.txt`](https://github.com/ezeluduena/socio-hackathon/blob/main/requirements.txt):** listado de librerías de python utilizadas en los notebooks.
   - **[`.gitignore`](/.gitignore):** listado de archivos de los que no se requiere versionado en el repositorio.
 
-## Instrucciones de Uso
+## Instrucciones de uso
 
 1. Clonar el repositorio.
 
