@@ -1,0 +1,101 @@
+---
+title: '2015'
+output: html_document
+date: "2024-10-21"
+---
+
+```{r abrir archivos}
+General = read.csv("General_concatenado.csv")
+
+
+Sexo = read.csv( "Sexo_concatenado.csv")
+
+
+Region = read.csv("Region_concatenado.csv")
+
+```
+
+```{r estimar general 2015}
+# Suponiendo que tu data frame se llama 'General' y tiene una columna 'year' con los años
+# Primero, crear una secuencia de todos los años que deberían estar presentes
+todos_los_años <- seq(2011, 2019)
+
+# Crear un nuevo data frame con todos los años
+General_completo <- data.frame(Año = todos_los_años)
+
+# Iterar sobre cada columna (excepto 'year') para interpolar los valores faltantes
+for (col in names(General)[-1]) {
+  
+  
+
+  
+  # Realizar la interpolación si hay suficientes datos no NA
+    interpolated_values <- approx(General$Año, General[[col]], xout = todos_los_años)$y
+
+
+    General_completo[[col]] <- interpolated_values
+}
+# Mostrar el data frame completo con los valores interpolados
+print(General_completo)
+
+
+write.csv(General_completo, "General-2015-estimado.csv")
+
+```
+
+```{r estimar sexo 2015}
+
+# Primero, crea un data frame con todos los años que deberían estar presentes
+todos_los_años <- seq(2011, 2019)
+
+# Para cada género, realizaremos la interpolación de los valores faltantes
+
+# Filtrar por "Mujer" y "Varón"
+Sexo_mujer <- Sexo %>% filter(Sexo == "Mujer")
+Sexo_varon <- Sexo %>% filter(Sexo == "Varón")
+
+# Crear un nuevo data frame para el resultado final
+Sexo_completo <- data.frame()
+
+# Interpolación para "Mujer"
+for (col in names(Sexo_mujer)[-c(1, 2)]) {  # Excluimos 'Año' y 'Sexo'
+  if (sum(!is.na(Sexo_mujer[[col]])) > 1) {  # Solo si hay más de 1 valor no NA
+    interpolated_values_mujer <- approx(Sexo_mujer$Año, Sexo_mujer[[col]], xout = todos_los_años, rule = 2)$y
+    Sexo_completo <- do.call(Sexo_completo, 
+                               data.frame(Año = todos_los_años, 
+                                          Sexo = "Mujer", 
+                                          Tasa.Actividad = interpolated_values_mujer[1], 
+                                          Tasa.Empleo = interpolated_values_mujer[2], 
+                                          Tasa.Desempleo = interpolated_values_mujer[3], 
+                                          Tasa.Informalidad = interpolated_values_mujer[4], 
+                                          Tasa.Subocupados = interpolated_values_mujer[5], 
+                                          PromedioProporcion = interpolated_values_mujer[6]))
+  }
+}
+
+# Hacer lo mismo para "Varón"
+for (col in names(Sexo_varon)[-c(1, 2)]) {  # Excluimos 'Año' y 'Sexo'
+  if (sum(!is.na(Sexo_varon[[col]])) > 1) {  # Solo si hay más de 1 valor no NA
+    interpolated_values_varon <- approx(Sexo_varon$Año, Sexo_varon[[col]], xout = todos_los_años, rule = 2)$y
+    Sexo_completo <- do.call(Sexo_completo, 
+                               data.frame(Año = todos_los_años, 
+                                          Sexo = "Varón", 
+                                          Tasa.Actividad = interpolated_values_varon[1], 
+                                          Tasa.Empleo = interpolated_values_varon[2], 
+                                          Tasa.Desempleo = interpolated_values_varon[3], 
+                                          Tasa.Informalidad = interpolated_values_varon[4], 
+                                          Tasa.Subocupados = interpolated_values_varon[5], 
+                                          PromedioProporcion = interpolated_values_varon[6]))
+  }
+}
+
+# Verifica el resultado
+head(Sexo_completo)
+
+# Exportar el resultado a un CSV
+write.csv(Sexo_completo, "Sexo_interpolado.csv", row.names = FALSE)
+
+
+
+
+```

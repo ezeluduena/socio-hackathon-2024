@@ -1,0 +1,338 @@
+---
+title: '2018'
+output: html_document
+date: "2024-10-14"
+---
+
+```{r prepación variables}
+# 1. Carga de paquetes que voy a usar
+
+library("tidyverse")
+library("foreign")
+library("eph")
+library("dplyr")
+library("questionr")
+library("stringr")
+library("gmodels")
+library("rstatix")
+library("writexl")
+```
+
+```{r base de eph}
+# 2. Descargar EPH del 4to trismestre 2018.
+# Una con sólo población PEA.
+EPH <- get_microdata(year = 2018, period = 4, type = "individual")
+```
+
+```{r códigos laborales}
+# 3. Sumar CAES, CNO y cambiar nombre a variables
+# CAES.
+EPH$PP04B_COD <- as.numeric(EPH$PP04B_COD)
+EPH <- organize_caes(base = EPH)
+
+# CNO.
+EPH <- organize_cno(base = EPH)
+
+# Renombrar variable de CNO CATEGORIA a CARACTER // Renombrar variable CAES a Rama de actividad.
+EPH <- EPH %>%
+  rename(CARACTER = CATEGORIA)
+
+EPH <- EPH %>%
+  rename(Rama.de.Actividad = caes_seccion_label)
+
+# Limpiar las variables que no quiero.
+
+EPH <- subset(EPH, select = -c(caes_version, PP04B_label, caes_seccion_cod, caes_division_cod, caes_division_label, caes_eph_cod))
+
+EPH <- subset(EPH, select = -caes_eph_label)
+
+# Renombrar las variables y categorías.
+EPH$Sexo <- as.character(EPH$CH04)
+EPH$Sexo[EPH$Sexo == 1] <- "Varón"
+EPH$Sexo[EPH$Sexo == 2] <- "Mujer"
+
+# Renombrar la variable de REGIÓN:
+EPH$REGION[EPH$REGION == "1"] <- "Gran Buenos Aires"
+EPH$REGION[EPH$REGION == "40"] <- "NOA"
+EPH$REGION[EPH$REGION == "41"] <- "NEA"
+EPH$REGION[EPH$REGION == "42"] <- "Cuyo"
+EPH$REGION[EPH$REGION == "43"] <- "Pampeana"
+EPH$REGION[EPH$REGION == "44"] <- "Patagónica"
+```
+
+```{r crear variable informales}
+# 4. Crear variable informales.
+EPH <- EPH %>%
+  mutate(Informales = case_when(
+    CAT_OCUP == 3 & PP07G_59 == 5 ~ 1,
+    CAT_OCUP == 3 & PP07G_59 == 0 ~ 0,
+    CAT_OCUP == 2 & PP07H == 2 ~ 1,
+    CAT_OCUP == 2 & PP07H == 1 ~ 0
+  ))
+
+EPH <- EPH %>%
+  mutate(Informales = factor(Informales, labels = c("Formal", "Informal")))
+```
+
+```{r calcular ingresos}
+# 5. Detalles para calcular ingresos.
+# Genero una variable que sea horas totales de trabajo
+EPH <- EPH %>%
+  mutate(Horas.totales.de.trabajo = PP3E_TOT + PP3F_TOT)
+
+# Genero una variable que sea ingresos laborales totales
+EPH <- EPH %>%
+  mutate(Ingresos.laborales.totales = P21)
+
+# Calculo ingresos x hora (a nivel mensual)
+EPH <- EPH %>%
+  mutate(Ingreso.por.hora = Ingresos.laborales.totales / ((Horas.totales.de.trabajo) * 4))
+
+# Calculo proporción de ingresos laborales sobre ingresos totales
+EPH <- EPH %>%
+  mutate(Proporcion.ingresos.laborales = Ingresos.laborales.totales / P47T)
+
+# Redondear la proporción a 2 decimales
+EPH$Proporcion.ingresos.laborales <- round(EPH$Ingresos.laborales.totales / EPH$P47T, 2)
+```
+
+
+```{r calcular tasa actividad}
+# 6.Cálculo de Tasas de actividad. País y CBA
+# a. Tasa de actividad país.
+Actividad.2018 <- EPH %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Tasa.Actividad = 100 * ((Ocupados + Desocupados) / Poblacion)
+  )
+
+# b.Tasa de actividad país por sexo.
+Actividad.sexo.2018 <- EPH %>%
+  group_by(Sexo) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Tasa.Actividad = 100 * ((Ocupados + Desocupados) / Poblacion)
+  )
+
+# C.Tasa de actividad país por región
+Actividad.Región.2018 <- EPH %>%
+  group_by(REGION) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Tasa.Actividad = 100 * ((Ocupados + Desocupados) / Poblacion)
+  )
+```
+
+```{r calcular tasa empleo}
+# 6.Cálculo de Tasas de empleo País y CBA
+# a. País.
+Empleo.2018 <- EPH %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Tasa.Empleo = 100 * (Ocupados / Poblacion)
+  )
+
+# b.País por sexo
+Empleo.sexo.2018 <- EPH %>%
+  group_by(Sexo) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Tasa.Empleo = 100 * (Ocupados / Poblacion)
+  )
+
+# c.País por región
+Empleo.región.2018 <- EPH %>%
+  group_by(REGION) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Tasa.Empleo = 100 * (Ocupados / Poblacion)
+  )
+```
+
+```{r calcular tasa desempleo}
+# 7.Cálculo de Tasas de desempleo País y CBA
+# a.País
+Desempleo.2018 <- EPH %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Tasa.Desempleo = 100 * (Desocupados / (Ocupados + Desocupados))
+  )
+
+# b.País por sexo.
+Desempleo.sexo.2018 <- EPH %>%
+  group_by(Sexo) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Tasa.Desempleo = 100 * (Desocupados / (Ocupados + Desocupados))
+  )
+
+# C.País por región
+Desempleo.región.2018 <- EPH %>%
+  group_by(REGION) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Tasa.Desempleo = 100 * (Desocupados / (Ocupados + Desocupados))
+  )
+```
+
+```{r calcular informalidad laboral}
+# 8.Cálculo de Informalidad laboral.
+
+# a. Informalidad país.
+Informalidad <- EPH %>%
+  filter(Informales %in% c("Formal", "Informal")) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Informales = sum(PONDERA[Informales == "Informal"]),
+    Tasa.Informalidad = 100 * (Informales / Ocupados)
+  )
+
+# b. Informalidad país por sexo.
+Informalidad.por.sexo <- EPH %>%
+  filter(Informales %in% c("Formal", "Informal")) %>%
+  group_by(Sexo) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Informales = sum(PONDERA[Informales == "Informal"]),
+    Tasa.Informalidad = 100 * (Informales / Ocupados)
+  )
+
+# b. Informalidad país por región.
+Informalidad.por.región <- EPH %>%
+  filter(Informales %in% c("Formal", "Informal")) %>%
+  group_by(REGION) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Informales = sum(PONDERA[Informales == "Informal"]),
+    Tasa.Informalidad = 100 * (Informales / Ocupados)
+  )
+```
+
+```{r calcular tasa subocupación}
+# 1.Todo el país.
+SubocupadoS.2018 <- EPH %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Subocupados = sum(PONDERA[ESTADO == 1 & INTENSI == 1 & PP03J %in% c(1, 2)]),
+    Tasa.Subocupados = 100 * (Subocupados / (Ocupados + Desocupados))
+  )
+
+
+
+# 2. Todo el país por sexo
+Subocupados.por.sexo.2018 <- EPH %>%
+  group_by(Sexo) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Subocupados = sum(PONDERA[ESTADO == 1 & INTENSI == 1 & PP03J %in% c(1, 2)]),
+    Tasa.Subocupados = 100 * (Subocupados / (Ocupados + Desocupados))
+  )
+
+# 3. País por región
+Subocupados.por.región.2018 <- EPH %>%
+  group_by(REGION) %>%
+  summarise(
+    Poblacion = sum(PONDERA),
+    Ocupados = sum(PONDERA[ESTADO == 1]),
+    Desocupados = sum(PONDERA[ESTADO == 2]),
+    Subocupados = sum(PONDERA[ESTADO == 1 & INTENSI == 1 & PP03J %in% c(1, 2)]),
+    Tasa.Subocupados = 100 * (Subocupados / (Ocupados + Desocupados))
+  )
+```
+
+```{r calcular proporcion ingresos laboras sobre ingresos totales}
+# 1.Proporción de ingresos laborales por sobre totales por sexo país
+Proporcion.ingresos.laborales.por.sexo.2018 <- EPH %>%
+  filter(CH06 > 13) %>%
+  filter(ESTADO == 1) %>%
+  filter(Proporcion.ingresos.laborales > 0) %>%
+  group_by(Sexo) %>%
+  summarise(PromedioProporcion = mean(Proporcion.ingresos.laborales, na.rm = TRUE))
+
+
+# 2.Proporción de ingresos laborales por sobre totales por sexo e informalidad
+
+Proporcion.ingresos.laborales.por.sexo.informalidad.2018 <- EPH %>%
+  filter(CH06 > 13) %>%
+  filter(ESTADO == 1) %>%
+  filter(Proporcion.ingresos.laborales > 0) %>%
+  group_by(Informales, Sexo) %>%
+  summarise(PromedioProporcion = mean(Proporcion.ingresos.laborales, na.rm = TRUE))
+
+# 3.Proporción de ingresos laborales por sobre totales por región país
+Proporcion.ingresos.laborales.por.region.2018 <- EPH %>%
+  filter(CH06 > 13) %>%
+  filter(ESTADO == 1) %>%
+  filter(Proporcion.ingresos.laborales > 0) %>%
+  group_by(REGION) %>%
+  summarise(PromedioProporcion = mean(Proporcion.ingresos.laborales, na.rm = TRUE))
+```
+
+```{r salidas}
+# Unir salidas tasas
+
+# General
+Tablas_unidas_2018 <- data.frame(
+  Año = 2018,
+  Actividad = Actividad.2018[1, "Tasa.Actividad"],
+  Empleo = Empleo.2018[1, "Tasa.Empleo"],
+  Desempleo = Desempleo.2018[1, "Tasa.Desempleo"],
+  Informalidad = Informalidad[1, "Tasa.Informalidad"],
+  Subocupados = SubocupadoS.2018[1, "Tasa.Subocupados"]
+)
+
+
+write.csv(Tablas_unidas_2018, "data/eph/2018/General.csv")
+
+# Por sexo
+Tablas_unidas_sexo_2018 <- data.frame(
+  Año = 2018,
+  Sexo = Actividad.sexo.2018["Sexo"],
+  Actividad = Actividad.sexo.2018["Tasa.Actividad"],
+  Empleo = Empleo.sexo.2018["Tasa.Empleo"],
+  Desempleo = Desempleo.sexo.2018["Tasa.Desempleo"],
+  Informalidad = Informalidad.por.sexo["Tasa.Informalidad"],
+  Subocupados = Subocupados.por.sexo.2018["Tasa.Subocupados"],
+  Proporción_de_ingresos_laborales_sobre_totales = Proporcion.ingresos.laborales.por.sexo.2018["PromedioProporcion"]
+)
+
+
+write.csv(Tablas_unidas_sexo_2018, "data/eph/2018/Sexo.csv")
+
+
+# Por región
+Tablas_unidas_region_2018 <- data.frame(
+  Año = 2018,
+  Region = Actividad.Región.2018["REGION"],
+  Actividad = Actividad.Región.2018["Tasa.Actividad"],
+  Empleo = Empleo.región.2018["Tasa.Empleo"],
+  Desempleo = Desempleo.región.2018["Tasa.Desempleo"],
+  Informalidad = Informalidad.por.región["Tasa.Informalidad"],
+  Subocupados = Subocupados.por.región.2018["Tasa.Subocupados"],
+  Proporción_de_ingresos_laborales_sobre_totales = Proporcion.ingresos.laborales.por.region.2018["PromedioProporcion"]
+)
+
+write.csv(Tablas_unidas_region_2018, "data/eph/2018/Region.csv")
+```
