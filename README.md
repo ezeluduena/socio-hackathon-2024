@@ -1,6 +1,6 @@
 # Análisis de la inversión en políticas laborales y su efecto durante el período 2012-2019 en Argentina
 
-En este repositorio se comparten los datos y scripts utilizados en el trabajo presentado en el **[Socio-hackathon Investigar en Sociales 2024](https://sociales.unc.edu.ar/content/todav-est-s-tiempo-de-presentarte-en-el-i-socio-hackathon-investigar-en-sociales-2024-la)** por **Manuel Barragán, Micaela De Hernández, Ezequiel Ludueña y Marco Spalletti**.
+En este repositorio se comparten los datos y scripts utilizados en el trabajo presentado en el **[Socio-hackathon Investigar en Sociales 2024](https://sociales.unc.edu.ar/content/todav-est-s-tiempo-de-presentarte-en-el-i-socio-hackathon-investigar-en-sociales-2024-la)** por **Manuel Barragán, Micaela de Hernández, Ezequiel Ludueña y Marco Spalletti**.
 
 La pregunta que guió el análisis y desarrollo de este trabajo fue:
 
