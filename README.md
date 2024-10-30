@@ -35,7 +35,7 @@ En [`informe.pdf`](https://github.com/ezeluduena/socio-hackathon/blob/main/infor
   - **[`requirements.txt`](https://github.com/ezeluduena/socio-hackathon/blob/main/requirements.txt):** listado de librerías de python utilizadas en los notebooks.
   - **[`.gitignore`](/.gitignore):** listado de archivos de los que no se requiere versionado en el repositorio.
 
-## Instrucciones de uso
+## Instrucciones de uso para corrección y reproducción del trabajo
 
 1. Clonar el repositorio.
 
@@ -61,18 +61,33 @@ pip install -r requirements.txt
 
 3. Abrir cualquiera de los notebooks con un IDE que permita ejecutarlos utilizando el entorno virtual creado previamente.
 
-### Scripts en R-markdown
-<!-- TODO -->
+### Scripts en R
+
+1. Instalar R desde [CRAN](https://cran.r-project.org/) y [RStudio](https://posit.co/download/rstudio-desktop/) o cualquier IDE donde ejecutar R.
+
+2. Instalar las dependencias necesarias:
+
+```r
+install.packages("tidyverse")
+install.packages("foreign")
+install.packages("eph")
+install.packages("dplyr")
+install.packages("questionr")
+install.packages("stringr")
+install.packages("gmodels")
+install.packages("rstatix")
+install.packages("writexl")
+```
+
+3. Abrir el repositorio y ejecutar los scripts de R desde RStudio o el IDE de su preferencia.
+
 
 ## TODOs:
 - Comentarios eph.ipynb
-- Comentarios cruce_eph_presupuesto.ipynb
 - Comentarios y mejor formateo del código en scripts_r
 - Terminar el readme.md
   - revisar escritura sea acorde con el informe
-  - terminar el cómo ejecutar los scritps de R
 - Subir informe en formato pdf
-- agregar algo sobre reproducibilidad en el repo
 - cambiar nombre del repo a socio-hackathon-2024
 - agregar tag de entrega
 - hacer público el repositorio
