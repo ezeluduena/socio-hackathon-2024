@@ -40,8 +40,8 @@ En [`informe.pdf`](/informe.pdf) se puede leer el informe del proyecto presentad
 1. Clonar el repositorio.
 
 ```bash
-git clone https://github.com/ezeluduena/socio-hackathon.git
-cd socio-hackathon
+git clone git@github.com:ezeluduena/socio-hackathon-2024.git
+cd socio-hackathon-2024
 ```
 
 ### Notebooks de python
