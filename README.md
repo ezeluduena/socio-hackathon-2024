@@ -10,29 +10,29 @@ Se pretendió analizar el impacto de los montos dedicados a políticas laborales
 
 Para realizar este trabajo, las fuentes de datos utilizadas fueron los [datos abiertos disponibles del presupuesto nacional](https://www.presupuestoabierto.gob.ar/sici/datos-abiertos) y los resultados que se obtuvieron a partir del trabajo con la [Encuesta Permanente de Hogares (EPH)](https://www.indec.gob.ar/indec/web/Institucional-Indec-BasesDeDatos), realizada por el [INDEC](https://www.indec.gob.ar/), que releva de manera trimestral los datos sociodemográficos y socioeconómicos de la población.
 
-En [`informe.pdf`](https://github.com/ezeluduena/socio-hackathon/blob/main/informe.pdf) se puede leer el informe del proyecto presentado en la competencia.
+En [`informe.pdf`](/informe.pdf) se puede leer el informe del proyecto presentado en la competencia.
 
 ## Estructura del repositorio
 
 - **Directorios:**
 
-  - **[`data`](https://github.com/ezeluduena/socio-hackathon/tree/main/data):** Datos de entrada y generados.
-  - **[`docs`](https://github.com/ezeluduena/socio-hackathon/tree/main/docs):** Documentación relacionada con las bases de datos utilizadas en el proyecto.
-  - **[`plots`](https://github.com/ezeluduena/socio-hackathon/tree/main/plots):** Gráficos y visualizaciones generadas.
-  - **[`utils`](https://github.com/ezeluduena/socio-hackathon/tree/main/utils):** Scripts utilizados para la descarga de datos de entrada.  
+  - **[`data`](/data):** Datos de entrada y generados.
+  - **[`docs`](/docs):** Documentación relacionada con las bases de datos utilizadas en el proyecto.
+  - **[`plots`](/plots):** Gráficos y visualizaciones generadas.
+  - **[`utils`](/utils):** Scripts utilizados para la descarga de datos de entrada.  
 
 - **Scripts de R:**
-  - **[`scripts_r`](https://github.com/ezeluduena/socio-hackathon/blob/main/scripts_r):** Directorio con los scripts utilizados para procesar los datos de la EPH año por año y generar valores para las distintas tasas analizadas.
+  - **[`scripts_r`](/scripts_r):** Directorio con los scripts utilizados para procesar los datos de la EPH año por año y generar valores para las distintas tasas analizadas.
 
 - **Notebooks de Python:**
-  - **[`presupuesto`](https://github.com/ezeluduena/socio-hackathon/blob/main/presupuesto.ipynb):** Scripts de procesamiento y visualización realizados sobre la base de datos de presupuesto abierto del gobierno nacional.
-  - **[`ipim`](https://github.com/ezeluduena/socio-hackathon/blob/main/ipim.ipynb):** Scripts de procesamiento realizados sobre los datos del Índice de Precios al por Mayor (IPIM), utilizado para deflactar los valores monetarios.
-  - **[`eph`](https://github.com/ezeluduena/socio-hackathon/blob/main/eph.ipynb):** Scripts de procesamiento y visualización sobre el trabajo realizado previamente utilizando los datos de la EPH.
-  - **[`cruce_eph_presupuesto`](https://github.com/ezeluduena/socio-hackathon/blob/main/cruce_eph_presupuesto.ipynb):** Scripts de procesamiento y visualización realizados sobre los resultados generados sobre el presupuesto y la EPH.
+  - **[`presupuesto`](/presupuesto.ipynb):** Scripts de procesamiento y visualización realizados sobre la base de datos de presupuesto abierto del gobierno nacional.
+  - **[`ipim`](/ipim.ipynb):** Scripts de procesamiento realizados sobre los datos del Índice de Precios al por Mayor (IPIM), utilizado para deflactar los valores monetarios.
+  - **[`eph`](/eph.ipynb):** Scripts de procesamiento y visualización sobre el trabajo realizado previamente utilizando los datos de la EPH.
+  - **[`cruce_eph_presupuesto`](/cruce_eph_presupuesto.ipynb):** Scripts de procesamiento y visualización realizados sobre los resultados generados sobre el presupuesto y la EPH.
 
 - **Otros archivos:**
-  - **[`informe.pdf`](https://github.com/ezeluduena/socio-hackathon/blob/main/informe.pdf):** informe sobre el trabajo realizado.
-  - **[`requirements.txt`](https://github.com/ezeluduena/socio-hackathon/blob/main/requirements.txt):** listado de librerías de python utilizadas en los notebooks.
+  - **[`informe.pdf`](/informe.pdf):** informe sobre el trabajo realizado.
+  - **[`requirements.txt`](/requirements.txt):** listado de librerías de python utilizadas en los notebooks.
   - **[`.gitignore`](/.gitignore):** listado de archivos de los que no se requiere versionado en el repositorio.
 
 ## Instrucciones de uso para corrección y reproducción del trabajo
@@ -80,15 +80,3 @@ install.packages("writexl")
 ```
 
 3. Abrir el repositorio y ejecutar los scripts de R desde RStudio o el IDE de su preferencia.
-
-
-## TODOs:
-- Comentarios eph.ipynb
-- Comentarios y mejor formateo del código en scripts_r
-- Terminar el readme.md
-  - revisar escritura sea acorde con el informe
-- Subir informe en formato pdf
-- cambiar nombre del repo a socio-hackathon-2024
-- agregar tag de entrega
-- hacer público el repositorio
-- agregar tags de github
