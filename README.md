@@ -1,5 +1,7 @@
 # Poniendo a trabajar a los números: Un análisis de la correlación entre el presupuesto nacional destinado a políticas de empleo y las tasas laborales en Argentina entre los períodos 2011-2015 y 2015-2019
 
+[![DOI](https://zenodo.org/badge/867894144.svg)](https://doi.org/10.5281/zenodo.15203919)
+
 En este repositorio se comparten los datos y scripts utilizados en el trabajo presentado en el **[Socio-hackathon Investigar en Sociales 2024](https://sociales.unc.edu.ar/content/todav-est-s-tiempo-de-presentarte-en-el-i-socio-hackathon-investigar-en-sociales-2024-la)** por **Manuel Barragán, Micaela de Hernández, Ezequiel Ludueña y Marco Spalletti**.
 
 La pregunta que guió el análisis y desarrollo de este trabajo fue:
